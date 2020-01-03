@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- slf4j日志配置文件 -->
+<configuration debug="true" scan="true" scanPeriod="30 seconds">
+    <!-- 设置日志输出根目录  -->
+    <property name="log.dir" value="${catalina.base}/logs"/>
+    <property name="encoding" value="UTF-8"/>
+    <property name="normal-pattern" value="%d{yyyy-MM-dd.HH:mm:ss.S} %X{QTRACER} %-5level  [%X{chatSocketKey}] [%X{sessionId}] [%thread] %logger{10}.%M:%L %msg%n"/>
+    <property name="error-pattern" value="%d{yyyy-MM-dd.HH:mm:ss.S} %X{QTRACER} %-5level  [%X{chatSocketKey}] [%X{sessionId}] [%thread-%d{HH:mm}] %logger.%M:%L  %msg%n"/>
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+    </appender>
+
+    <!--业务主日志-->
+    <appender name="fileDefault" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.dir}/common.log</file>
+        <prudent>false</prudent>
+        <Append>true</Append>
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/common.log.%d{yyyy-MM-dd-HH}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!--群聊日志   群列表轮询日志可能会很多-->
+    <appender name="groupChat" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.dir}/groupChat.log</file>
+        <prudent>false</prudent>
+        <Append>true</Append>
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/groupChat.log.%d{yyyy-MM-dd-HH}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="common_async" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>2000</queueSize>
+        <appender-ref ref="fileDefault"/>
+        <discardingThreshold>0</discardingThreshold>
+        <!--record lineNo-->
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!--别的-->
+    <appender name="thanos" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.dir}/thanos.log</file>
+        <prudent>false</prudent>
+        <Append>true</Append>
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/thanos.log.%d{yyyy-MM-dd-HH}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="thanos_async" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>2000</queueSize>
+        <appender-ref ref="thanos"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+
+    <!-- 时间滚动输出 level为 ERROR 日志 -->
+    <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.dir}/error.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${error-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+    </appender>
+
+    <!--<logger name="com.bee.inception.thanos.web.controller.wechat.GroupChatController" additivity="false" level="INFO">-->
+        <!--<appender-ref ref="groupChat"/>-->
+        <!--<appender-ref ref="file_error"/>-->
+    <!--</logger>-->
+
+
+    <logger name="com.bee.inception" additivity="false" level="INFO">
+        <appender-ref ref="thanos_async"/>
+        <appender-ref ref="file_error"/>
+    </logger>
+
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="common_async"/>
+        <appender-ref ref="file_error"/>
+    </root>
+
+</configuration>
