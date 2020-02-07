@@ -59,6 +59,16 @@ public class JacksonUtil {
         }
     }
 
+    /**
+     *  解析泛型content。用法，例如要解析 Person<E>类型，则可以这样使用：Person<E> p=JSONUtil.deSerialize(json,new
+     *  TypeReference<Person<E></E>>()); 再如：解析Map<String,Map<Integer,String>>，则可以这样使用：Map<String,Map<Integer,String>>
+     *  m=JSONUtil.deSerialize(json,new TypeReference<Map<String,Map<Integer,String>>>());
+     *
+     * @param content
+     * @param typeReference
+     * @param <T>
+     * @return
+     */
     public static <T> T deSerialize(String content, TypeReference<T> typeReference) {
         try {
             return mapper.readValue(content, typeReference);
