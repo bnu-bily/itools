@@ -15,7 +15,6 @@ import javax.net.ssl.SSLException;
 import com.common.bean.SerializeTest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
-import com.sun.jmx.snmp.ThreadContext;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
