@@ -15,17 +15,21 @@ import javax.net.ssl.SSLException;
 import com.common.bean.SerializeTest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
+import com.sun.jmx.snmp.ThreadContext;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -315,6 +319,21 @@ public class HttpUtil {
         } finally {
             logger.info("do http post multi part, url: {}, param: {}, resp: {}, cost: {}", url, JacksonUtil.serialize(pairs), resp, stopwatch.elapsed(TimeUnit.MILLISECONDS));
         }
+    }
+
+    public static HttpResponse request(HttpUriRequest httpUriRequest) {
+        long start = System.currentTimeMillis();
+        try {
+            CloseableHttpResponse response = getHttpclient().execute(httpUriRequest);
+            return response;
+        } catch (Exception e) {
+
+            logger.info("http请求失败", e);
+        } finally {
+            long cost = System.currentTimeMillis() - start;
+            logger.info("http请求完成，耗时 {}", cost);
+        }
+        return null;
     }
 
     public static void main(String []args){
