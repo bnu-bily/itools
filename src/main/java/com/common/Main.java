@@ -4,8 +4,8 @@ import com.common.bean.SerializeTest;
 import com.common.utils.JacksonUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class Main {
 
@@ -31,7 +31,9 @@ public class Main {
         Map<Integer, String> map = JacksonUtil.deSerialize(json, new TypeReference<Map<Integer, String>>() {
         });
         System.out.println(map.get(1));
-
-
+        /**
+         * java 原生自带的uuid生成
+         */
+        System.out.println(UUID.randomUUID());
     }
 }
