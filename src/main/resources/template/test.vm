@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href="//q.qunarzz.com/nb_sc/prd/css/bootstrap-cerulean.min@99800d176106fe6e6028acde2a4f79d3.css"/>
+    <!-- jQuery and  bootstrap-->
+    <script src="//q.qunarzz.com/nb_sc/prd/bower_components/jquery/jquery.min@25af9a9b271f3c6c7e1367fbb2143c6a.js"></script>
+    <script src="//q.qunarzz.com/nb_sc/prd/bower_components/bootstrap/dist/js/bootstrap.min@b083e32312e9547ccb0cc420afa794ca.js"></script>
+    <title>群人数一直无变化</title>
+</head>
+<body>
+<div class="container">
+    #foreach($group in $groups)
+        <div class="col-md-12">
+            <p>群编码：$!{group.groupCode}</p>
+            <p>群名：$!{group.groupName}</p>
+            <p>顾问微信号：$!{group.advisorWechatId}</p>
+            <p>群人数：$!{group.memberCount}</p>
+            <p>群人数上次更新时间：$!{group.numberUpdateTime}</p>
+        </div>
+        <br/>
+    #end
+</div>
+</body>
+</html>
